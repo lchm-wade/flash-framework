@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.foco.db.autoconfigure.MapperScannerAutoConfiguration,\
+  com.foco.db.autoconfigure.TransmitAutoConfiguration
+org.springframework.context.ApplicationListener=\
+  com.foco.db.scanner.FocoClassPathScanner

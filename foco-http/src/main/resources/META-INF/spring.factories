@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.foco.http.autoconfigure.HttpAutoConfiguration
+org.springframework.boot.env.EnvironmentPostProcessor=\
+  com.foco.http.annotation.HttpClientRegistrar
+

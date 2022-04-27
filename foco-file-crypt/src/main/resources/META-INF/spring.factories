@@ -1,0 +1,4 @@
+org.springframework.boot.env.EnvironmentPostProcessor=\
+  com.foco.file.crypt.FileCryptPostProcessor
+org.springframework.cloud.bootstrap.BootstrapConfiguration=\
+com.foco.file.crypt.CustomNacosConfigBootstrapConfiguration

@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.foco.mq.autoconfigure.MqConfiguration,\
+  com.foco.mq.autoconfigure.ExtendBeforeProcessorConfiguration

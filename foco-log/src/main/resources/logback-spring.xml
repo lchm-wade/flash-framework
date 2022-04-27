@@ -1,0 +1,81 @@
+<!-- Logback configuration. See http://logback.qos.ch/manual/index.html -->
+<configuration scan="true" scanPeriod="10 seconds">
+    <springProperty scope="context" name="SERVICE_NAME" source="spring.application.name"/>
+    <property name="CONSOLE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %level [${SERVICE_NAME},%traceId,%trace_segment_id,%spanId,%parentSpanId] %logger{36} -%msg%n"/>
+
+    <property name="CONSOLE_CLR_LOG_PATTERN"
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}) %clr([%thread]){magenta} %clr(%level){cyan} [${SERVICE_NAME},%traceId,%trace_segment_id,%spanId,%parentSpanId] %clr(%logger{36}){cyan} %clr(:){faint} -%msg%n"/>
+    <conversionRule conversionWord="traceId" converterClass="com.foco.middleware.skywalking.toolkit.logback.v1.x.pattern.LogbackTidConverter"/>
+    <conversionRule conversionWord="spanId" converterClass="com.foco.middleware.skywalking.toolkit.logback.v1.x.pattern.LogbackSpanIdConverter"/>
+    <conversionRule conversionWord="parentSpanId" converterClass="com.foco.middleware.skywalking.toolkit.logback.v1.x.pattern.LogbackParentSpanIdConverter"/>
+    <conversionRule conversionWord="trace_segment_id" converterClass="com.foco.middleware.skywalking.toolkit.logback.v1.x.pattern.LogbackTraceSegmentIdConverter"/>
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="CONSOLE_CLR" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_CLR_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="LOGSTASH" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <File>log/${SERVICE_NAME}-info.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>log/${SERVICE_NAME}-info-%d{yyyyMMdd}.log.%i</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${LOG_FILE_MAX_SIZE:-500MB}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>${LOG_FILE_MAX_HISTORY:-10}</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <timeZone>Asia/Shanghai</timeZone>
+                </timestamp>
+                <pattern>
+                    <pattern>
+                        {
+                        "app_name": "${SERVICE_NAME}",
+                        "level": "%level",
+                        "trace_id": "%traceId",
+                        "trace_segment_id": "%trace_segment_id",
+                        "span_id": "%spanId",
+                        "parent_span_id": "%parentSpanId",
+                        "thread": "%thread",
+                        "class": "%logger{40}",
+                        "message": "%message",
+                        "stack_trace": "%exception"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+    <!--非生产环境 在控制台输出,windows本地打印有色彩的日志 -->
+    <focoProfile name="!prod" value="windows">
+            <root level="INFO">
+                <appender-ref ref="CONSOLE_CLR"/>
+            </root>
+    </focoProfile>
+    <!--非生产环境 在控制台输出,非windows打印无色彩的日志 -->
+    <focoProfile name="!prod" value="!windows">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </focoProfile>
+    <!--生产环境只打印文件,不在控制台输出 -->
+    <focoProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="LOGSTASH"/>
+        </root>
+    </focoProfile>
+</configuration>

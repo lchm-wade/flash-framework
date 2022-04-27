@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.foco.internation.bootstrap.InternationalBootStrap
+org.springframework.boot.env.EnvironmentPostProcessor=\
+  com.foco.internation.InternationalEnvironmentPostProcessor

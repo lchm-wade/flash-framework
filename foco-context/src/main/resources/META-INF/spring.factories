@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.foco.context.autoconfigure.FocoContextAutoConfiguration
+org.springframework.context.ApplicationListener=\
+  com.foco.context.core.SpringContextHolder,\
+  com.foco.context.logging.FocoApplicationListener

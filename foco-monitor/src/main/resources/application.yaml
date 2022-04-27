@@ -1,0 +1,39 @@
+management:
+  # 生产环境使用
+  server:
+    servlet:
+      contextPath: /
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name}
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+      #所有健康检查 显示明细信息
+      show-details: always
+      #配置健康检查组
+      group:
+        #就绪检查组
+        readiness:
+          include: readinessState,db,redis,nacosConfig,nacosDiscovery
+        #健康检查组
+        liveness:
+          include: livenessState,db,redis,nacosConfig,nacosDiscovery
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+        #include: ["prometheus","health","info","nacosconfig","nacosdico"]
