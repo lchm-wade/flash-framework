@@ -44,7 +44,7 @@
     <artifactId>foco-framework</artifactId>
     <version>2.4.2-RELEASE</version>
     <packaging>pom</packaging>
-    <name>foco-framework</name>
+    <name>flash-framework</name>
     <description>基础技术框架</description>
 
     <properties>
